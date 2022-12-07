@@ -1,0 +1,13 @@
+name: goalies
+title: goalies
+username:
+account: catalystdatascience
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7803057
+bundleId: 6586295
+url: https://catalystdatascience.shinyapps.io/goalies/
+when: 1670077180.5601
+lastSyncTime: 1670077180.56011
+asMultiple: FALSE
+asStatic: FALSE
