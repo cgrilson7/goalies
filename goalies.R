@@ -100,7 +100,7 @@ output$plot_diagonal <- renderPlot({
   
   goalies_ongoal_filtered <- goalies_situation_filtered %>%
     dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight)) %>%
-      left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(fill = "#8c2981", color = "#8c2981", fontface = "bold.italic")), by = c("playerId" = "playerId")) %>%
+      left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(fill = "#ab8d2c", color = "#ab8d2c", fontface = "bold.italic")), by = c("playerId" = "playerId")) %>%
       mutate(fill = coalesce(fill, "grey10"),
              color = coalesce(color, "grey10"),
              fontface = coalesce(fontface, "plain"))
@@ -187,7 +187,7 @@ output$plot_gsax <- renderPlot({
   
   goalies_ongoal_filtered <- goalies_situation_filtered %>%
     dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight)) %>%
-    left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(fill = "#8c2981", color = "#8c2981", fontface = "bold.italic")), by = c("playerId" = "playerId")) %>%
+    left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(fill = "#ab8d2c", color = "#ab8d2c", fontface = "bold.italic")), by = c("playerId" = "playerId")) %>%
     mutate(fill = coalesce(fill, "grey10"),
            color = coalesce(color, "grey10"),
            fontface = coalesce(fontface, "plain"))
