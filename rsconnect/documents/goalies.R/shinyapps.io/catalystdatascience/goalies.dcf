@@ -5,9 +5,9 @@ account: catalystdatascience
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7803057
-bundleId: 6611485
+bundleId: 6611585
 url: https://catalystdatascience.shinyapps.io/goalies/
-when: 1670521414.08823
-lastSyncTime: 1670521414.08824
+when: 1670523062.89442
+lastSyncTime: 1670523062.89444
 asMultiple: FALSE
 asStatic: FALSE

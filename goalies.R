@@ -40,9 +40,9 @@ ui <- fluidPage(
            h3("How to Read This Chart"),
            h4("The vertical lines represent the average expected goals per 60 minutes for goalies shown, and +/- one standard deviation around this average."),
            h4("The diagonal lines represent various levels of goaltender performance vs. their expected goals against:"),
-           h4(strong("Purple - worse than expected", style = "color: #440154"), " (+1 GSAX per 60)", "|",
+           h4(strong("Purple - worse than expected", style = "color: #440154"), " (-1 GSAX per 60)", "|",
               strong("Blue - performing as expected", style = "color: #31688e"), "|",
-              strong("Green - better than expected", style = "color: #35b779"), " (-1 GSAX per 60)"),
+              strong("Green - better than expected", style = "color: #35b779"), " (+1 GSAX per 60)"),
            plotOutput('plot_diagonal', height = "800px", width = "100%"
            #            , hover = hoverOpts(
            #   id = 'plot_hover',
@@ -55,9 +55,9 @@ ui <- fluidPage(
            h3("How to Read This Chart"),
            h4("The vertical line represents the average expected goals per 60 minutes for goalies shown."),
            h4("The horizontal lines represent various levels of goaltender performance vs. their expected goals against:"),
-           h4(strong("Purple - worse than expected", style = "color: #440154"), " (+1 GSAX per 60)", "|",
+           h4(strong("Purple - worse than expected", style = "color: #440154"), " (-1 GSAX per 60)", "|",
               strong("Blue - performing as expected", style = "color: #31688e"), "|",
-              strong("Green - better than expected", style = "color: #35b779"), " (-1 GSAX per 60)"),
+              strong("Green - better than expected", style = "color: #35b779"), " (+1 GSAX per 60)"),
            plotOutput('plot_gsax', height = "800px", width = "100%"
                       #            , hover = hoverOpts(
                       #   id = 'plot_hover',
@@ -157,8 +157,8 @@ output$plot_diagonal <- renderPlot({
     #          x = c(xg60_avg, xmax_calc, xmax_calc, xg60_avg),
     #          y = c(xg60_avg, xmax_calc, ymin_calc, ymin_calc),
     #          fill = "#31688e", alpha = 0.1) +
-    labs(x = "Expected Goals per 60",
-         y = "Goals per 60",
+    labs(x = "Expected Goals Against per 60",
+         y = "Goals Against per 60",
          size = "Total Icetime (60 Minute Increments)") +
     theme(plot.background = element_rect(fill = "white"),
           panel.background = element_rect(fill = "white"),
@@ -242,7 +242,7 @@ output$plot_gsax <- renderPlot({
   #          x = c(xg60_avg, xmax_calc, xmax_calc, xg60_avg),
   #          y = c(xg60_avg, xmax_calc, ymin_calc, ymin_calc),
   #          fill = "#31688e", alpha = 0.1) +
-  labs(x = "Expected Goals per 60",
+  labs(x = "Expected Goals Against per 60",
        y = "Goals Saved Above Expected per 60",
        size = "Total Icetime (60 Minute Increments)") +
     theme(plot.background = element_rect(fill = "white"),
