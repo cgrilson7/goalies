@@ -3,8 +3,8 @@
 library(readr)
 library(dplyr)
 
-goalies <- read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/2022/regular/goalies.csv") %>%
-  select(playerId, season, name, team, situation, icetime, xGoals, goals) %>%
+goalies <- read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/2022/regular/goalies.csv", col_names = FALSE) %>%
+  select(playerId = X1, season = X2, name = X3, team = X4, situation = X6, icetime = X8, xGoals = X9, goals = X10) %>%
   mutate(last_name = sub("^\\S+\\s+", '', name)) %>%
   mutate(last_name_plus_team = paste0(last_name, "\n", team)) %>%
   mutate(g60 = goals / (icetime/(60*60)),
@@ -12,6 +12,7 @@ goalies <- read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/20
          gsax = xGoals - goals,
          gsax60 = gsax / (icetime/(60*60)))
 
+teams <- unique(goalies$team)
 names_to_ids <- goalies$playerId
 names(names_to_ids) <- goalies$name
 
@@ -30,10 +31,12 @@ ui <- fluidPage(
   ),
   fluidRow(align = 'center',
            uiOutput("select_rendered"),
-           uiOutput("slider_rendered"),
-           selectInput("player_highlight", "Highlight a Player", choices = names_to_ids, multiple = TRUE, selected = 8476899
-)
+           uiOutput("slider_rendered")
   ),
+  fluidRow(column(width = 3, br()),
+           column(width = 3, align = 'center', selectInput("player_highlight", "Highlight a Player", choices = names_to_ids, multiple = TRUE, selected = NULL)),
+           column(width = 3, align = 'center',selectInput("team_highlight", "Highlight a Team", choices = teams, multiple = FALSE, selected = NULL)),
+           column(width = 3, br())),
   fluidRow(column(width = 6, 
                   align = 'center',
            h1("Performance (GA/60) vs. Expected (xGA/60)"),
@@ -107,11 +110,12 @@ output$plot_diagonal <- renderPlot({
   
   goalies_ongoal_filtered <- goalies_situation_filtered %>%
     dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight)) %>%
-      left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(fill = "#ab8d2c", color = "#ab8d2c", fontface = "bold.italic", stroke = 2)), by = c("playerId" = "playerId")) %>%
-      mutate(fill = coalesce(fill, "grey10"),
-             color = coalesce(color, "grey10"),
-             fontface = coalesce(fontface, "plain"),
-             stroke = coalesce(stroke, 1))
+      left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(player_fill = "#ab8d2c", player_color = "#ab8d2c", player_fontface = "bold.italic", player_stroke = 2)), by = c("playerId" = "playerId")) %>%
+      left_join((tibble(team = as.character(input$team_highlight)) %>% mutate(team_fill = "#ab8d2c", team_color = "#ab8d2c", team_fontface = "bold.italic", team_stroke = 2)), by = c("team" = "team")) %>%
+      mutate(fill = coalesce(player_fill, team_fill, "grey10"),
+             color = coalesce(player_color, team_color, "grey10"),
+             fontface = coalesce(player_fontface, team_fontface, "plain"),
+             stroke = coalesce(player_stroke, team_stroke, 1))
   
   xmin_calc =   floor(min(goalies_ongoal_filtered$xg60)*2)/2
   xmax_calc = ceiling(max(goalies_ongoal_filtered$xg60)*2)/2
@@ -179,11 +183,12 @@ output$plot_gsax <- renderPlot({
   
   goalies_ongoal_filtered <- goalies_situation_filtered %>%
     dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight)) %>%
-    left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(fill = "#ab8d2c", color = "#ab8d2c", fontface = "bold.italic", stroke = 2)), by = c("playerId" = "playerId")) %>%
-    mutate(fill = coalesce(fill, "grey10"),
-           color = coalesce(color, "grey10"),
-           fontface = coalesce(fontface, "plain"),
-           stroke = coalesce(stroke, 1))
+    left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(player_fill = "#ab8d2c", player_color = "#ab8d2c", player_fontface = "bold.italic", player_stroke = 2)), by = c("playerId" = "playerId")) %>%
+    left_join((tibble(team = as.character(input$team_highlight)) %>% mutate(team_fill = "#ab8d2c", team_color = "#ab8d2c", team_fontface = "bold.italic", team_stroke = 2)), by = c("team" = "team")) %>%
+    mutate(fill = coalesce(player_fill, team_fill, "grey10"),
+           color = coalesce(player_color, team_color, "grey10"),
+           fontface = coalesce(player_fontface, team_fontface, "plain"),
+           stroke = coalesce(player_stroke, team_stroke, 1))
   
   xmin_calc =   floor(min(goalies_ongoal_filtered$xg60)*2)/2
   xmax_calc = ceiling(max(goalies_ongoal_filtered$xg60)*2)/2
