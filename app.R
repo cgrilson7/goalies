@@ -12,7 +12,7 @@ goalies <- read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/20
          gsax = xGoals - goals,
          gsax60 = gsax / (icetime/(60*60)))
 
-teams <- unique(goalies$team)
+teams <- unique(goalies$team) %>% sort()
 names_to_ids <- goalies$playerId
 names(names_to_ids) <- goalies$name
 
@@ -35,7 +35,7 @@ ui <- fluidPage(
   ),
   fluidRow(column(width = 3, br()),
            column(width = 3, align = 'center', selectInput("player_highlight", "Highlight a Player", choices = names_to_ids, multiple = TRUE, selected = NULL)),
-           column(width = 3, align = 'center',selectInput("team_highlight", "Highlight a Team", choices = teams, multiple = FALSE, selected = NULL)),
+           column(width = 3, align = 'center', selectInput("team_highlight", "Highlight a Team", choices = c("", teams), multiple = FALSE, selected = "")),
            column(width = 3, br())),
   fluidRow(column(width = 6, 
                   align = 'center',
@@ -109,7 +109,7 @@ output$plot_diagonal <- renderPlot({
   req(input$icetime_filter)
   
   goalies_ongoal_filtered <- goalies_situation_filtered %>%
-    dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight)) %>%
+    dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight) | team %in% as.character(input$team_highlight)) %>%
       left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(player_fill = "#ab8d2c", player_color = "#ab8d2c", player_fontface = "bold.italic", player_stroke = 2)), by = c("playerId" = "playerId")) %>%
       left_join((tibble(team = as.character(input$team_highlight)) %>% mutate(team_fill = "#ab8d2c", team_color = "#ab8d2c", team_fontface = "bold.italic", team_stroke = 2)), by = c("team" = "team")) %>%
       mutate(fill = coalesce(player_fill, team_fill, "grey10"),
@@ -182,7 +182,7 @@ output$plot_gsax <- renderPlot({
   req(input$icetime_filter)
   
   goalies_ongoal_filtered <- goalies_situation_filtered %>%
-    dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight)) %>%
+    dplyr::filter(icetime > quantile(icetime, (input$icetime_filter/100)) | playerId %in% as.integer(input$player_highlight) | team %in% as.character(input$team_highlight)) %>%
     left_join((tibble(playerId = as.integer(input$player_highlight)) %>% mutate(player_fill = "#ab8d2c", player_color = "#ab8d2c", player_fontface = "bold.italic", player_stroke = 2)), by = c("playerId" = "playerId")) %>%
     left_join((tibble(team = as.character(input$team_highlight)) %>% mutate(team_fill = "#ab8d2c", team_color = "#ab8d2c", team_fontface = "bold.italic", team_stroke = 2)), by = c("team" = "team")) %>%
     mutate(fill = coalesce(player_fill, team_fill, "grey10"),
