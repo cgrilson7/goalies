@@ -3,8 +3,11 @@
 library(readr)
 library(dplyr)
 
-goalies <- read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/2022/regular/goalies.csv", col_names = FALSE) %>%
-  select(playerId = X1, season = X2, name = X3, team = X4, situation = X6, icetime = X8, xGoals = X9, goals = X10) %>%
+goalies <- 
+  # read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/2022/regular/goalies.csv", col_names = FALSE) %>%
+  # select(playerId = X1, season = X2, name = X3, team = X4, situation = X6, icetime = X8, xGoals = X9, goals = X10) %>%
+  read_csv("https://moneypuck.com/moneypuck/playerData/seasonSummary/2022/regular/goalies.csv") %>%
+  select(playerId, season, name, team, situation, icetime, xGoals, goals) %>%
   mutate(last_name = sub("^\\S+\\s+", '', name)) %>%
   mutate(last_name_plus_team = paste0(last_name, "\n", team)) %>%
   mutate(g60 = goals / (icetime/(60*60)),

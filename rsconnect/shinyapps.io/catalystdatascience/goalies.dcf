@@ -5,9 +5,10 @@ account: catalystdatascience
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7803057
-bundleId: 6640102
+bundleId: 6644620
 url: https://catalystdatascience.shinyapps.io/goalies/
-when: 1671109128.07318
-lastSyncTime: 1671109128.07319
+when: 1671200396.8209
+lastSyncTime: 1671200396.82091
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: Dockerfile|generate_dockerfile.R
